@@ -99,12 +99,17 @@
         let apiUrl = '';
     
         // Event listener for the Convert button
-        document.getElementById('convertButton').addEventListener('click', function() {
-            const queryUrl = document.getElementById('urlInput').value;
-            const apiKey = document.getElementById('apiKeyInput').value || "API-KEY";
-            apiUrl = search2API(queryUrl, apiKey);
-            document.getElementById('output').textContent = apiUrl;
-        });
+document.getElementById('convertButton').addEventListener('click', function() {
+    const queryUrl = document.getElementById('urlInput').value;
+    const apiKey = document.getElementById('apiKeyInput').value || "API-KEY";
+    
+    // Update the API URL each time Convert is clicked
+    apiUrl = search2API(queryUrl, apiKey);
+    
+    // Display the updated API URL in the output box
+    document.getElementById('output').textContent = apiUrl;
+});
+
     
         // Event listener for the Copy button
         document.getElementById('copyButton').addEventListener('click', function() {
