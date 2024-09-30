@@ -6,6 +6,10 @@
     <title>ddbAPIdapter - A Simple DDB API Converter</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Prism.js for JSON syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+  
     <style>
         .output-box {
             display: flex;
@@ -80,6 +84,11 @@
         <p>This application was created using ChatGPT 4.0.</p>
         <p>Prompting was done by Alexander Winkler <a href="https://orcid.org/0000-0002-9145-7238" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/06/ORCID_iD.svg" alt="ORCID logo" width="16" height="16">ORCID: https://orcid.org/0000-0002-9145-7238</a>.</p>
     </footer>
+
+     <!-- Prism.js -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-json.min.js"></script>
+     
     
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -116,7 +125,9 @@
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById('apiResult').textContent = JSON.stringify(data, null, 2);
+                        // Format JSON data and highlight it
+                        const formattedJson = JSON.stringify(data, null, 2);
+                        document.getElementById('apiResult').innerHTML = `<code class="language-json">${Prism.highlight(formattedJson, Prism.languages.json, 'json')}</code>`;
                     })
                     .catch(error => {
                         document.getElementById('apiResult').textContent = 'Error: ' + error;
@@ -125,7 +136,7 @@
                 document.getElementById('apiResult').textContent = 'Please convert the URL first!';
             }
         });
-    
+
         // Function that converts the search URL into the API URL
         function search2API(queryurl, api_key) {
             const urlParams = new URLSearchParams(new URL(queryurl).search);
@@ -138,13 +149,13 @@
             } else {
                 endpoint = "https://api.deutsche-digitale-bibliothek.de/search?";
             }
-    
+
             let defaultValues = [`oauth_consumer_key=${api_key}`];
             if (urlParams.has('query')) {
                 const query = urlParams.get('query');
                 defaultValues.push(`query=${encodeURIComponent(query)}`);
             }
-    
+
             const facetValues = urlParams.getAll('facetValues[]');
             if (facetValues.length > 0) {
                 facetValues.forEach(facet => {
@@ -152,7 +163,7 @@
                     defaultValues.push(`facet=${fac}&${fac}=${encodeURIComponent(val)}`);
                 });
             }
-    
+
             return endpoint + defaultValues.join('&');
         }
     </script>
