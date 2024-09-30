@@ -11,6 +11,8 @@ ddbAPIdapter is a simple web tool that converts a search URL from the [Deutsche 
 
 ## Demo
 
+![Screenshot](screenshot.png)
+
 You can try the tool [here](https://alexander-winkler.github.io/ddbAPIdapter) by providing a DDB search URL, and the tool will generate an API URL for you. If you provide a valid API key, you can even run the request and see the results.
 
 ## Getting Started
