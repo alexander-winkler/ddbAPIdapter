@@ -137,35 +137,39 @@
             }
         });
 
-        // Function that converts the search URL into the API URL
         function search2API(queryurl, api_key) {
-            const urlParams = new URLSearchParams(new URL(queryurl).search);
-            let endpoint = '';
-            
-            if (queryurl.includes('search/organization?')) {
-                endpoint = "https://api.deutsche-digitale-bibliothek.de/search/organization?";
-            } else if (queryurl.includes('search/person?')) {
-                endpoint = "https://api.deutsche-digitale-bibliothek.de/search/person?";
-            } else {
-                endpoint = "https://api.deutsche-digitale-bibliothek.de/search?";
-            }
+    const urlParams = new URLSearchParams(new URL(queryurl).search);
+    let endpoint = '';
+    
+    if (queryurl.includes('search/organization?')) {
+        endpoint = "https://api.deutsche-digitale-bibliothek.de/search/organization?";
+    } else if (queryurl.includes('search/person?')) {
+        endpoint = "https://api.deutsche-digitale-bibliothek.de/search/person?";
+    } else {
+        endpoint = "https://api.deutsche-digitale-bibliothek.de/search?";
+    }
 
-            let defaultValues = [`oauth_consumer_key=${api_key}`];
-            if (urlParams.has('query')) {
-                const query = urlParams.get('query');
-                defaultValues.push(`query=${encodeURIComponent(query)}`);
-            }
+    let defaultValues = [`oauth_consumer_key=${api_key}`];
+    
+    // Properly encode the 'query' parameter using encodeURIComponent
+    if (urlParams.has('query')) {
+        const query = urlParams.get('query');
+        defaultValues.push(`query=${query}`);
+    }
 
-            const facetValues = urlParams.getAll('facetValues[]');
-            if (facetValues.length > 0) {
-                facetValues.forEach(facet => {
-                    const [fac, val] = facet.split('=');
-                    defaultValues.push(`facet=${fac}&${fac}=${encodeURIComponent(val)}`);
-                });
-            }
+    // Handle facet values properly
+    const facetValues = urlParams.getAll('facetValues[]');
+    if (facetValues.length > 0) {
+        facetValues.forEach(facet => {
+            const [fac, val] = facet.split('=');
+            defaultValues.push(`facet=${fac}&${fac}=${encodeURIComponent(val)}`);
+        });
+    }
 
-            return endpoint + defaultValues.join('&');
-        }
+    // Return the final API call URL with proper encoding
+    return endpoint + defaultValues.join('&');
+}
+
     </script>
     
 
