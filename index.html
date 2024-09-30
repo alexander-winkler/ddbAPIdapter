@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ddbAPIdapter - A Simple DDB API Converter</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .output-box {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .output {
+            width: 100%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            word-break: break-all;
+        }
+        .copy-icon {
+            cursor: pointer;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        #apiResult {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        footer img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body class="container">
+
+    <h1 class="my-4">ddbAPIdapter</h1>
+    <p>A simple tool that translates a Deutsche Digitale Bibliothek (DDB) search URL into a DDB API call.</p>
+    
+    <div class="form-group">
+        <label for="urlInput">URL:</label>
+        <input type="text" id="urlInput" class="form-control" placeholder="Enter the search URL">
+    </div>
+    
+    <div class="form-group">
+        <label for="apiKeyInput">API Key (optional):</label>
+        <input type="text" id="apiKeyInput" class="form-control" value="API-KEY">
+    </div>
+    
+    <button id="convertButton" class="btn btn-primary mb-3">Convert</button>
+    
+    <div class="output-box">
+        <div id="output" class="output"></div>
+        <span id="copyButton" class="copy-icon" title="Copy to clipboard">📋</span>
+    </div>
+    
+    <button id="tryItButton" class="btn btn-success mt-3">Try it out!</button>
+
+    <h2 class="my-4">API Result</h2>
+    <pre id="apiResult">No result yet.</pre>
+
+    <footer>
+        <p>This application was created using ChatGPT 4.0.</p>
+        <p>Prompting was done by Alexander Winkler <a href="https://orcid.org/0000-0002-9145-7238" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/06/ORCID_iD.svg" alt="ORCID logo" width="16" height="16">ORCID: https://orcid.org/0000-0002-9145-7238</a>.</p>
+    </footer>
+    
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        let apiUrl = '';
+    
+        // Event listener for the Convert button
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const queryUrl = document.getElementById('urlInput').value;
+            const apiKey = document.getElementById('apiKeyInput').value || "API-KEY";
+            apiUrl = search2API(queryUrl, apiKey);
+            document.getElementById('output').textContent = apiUrl;
+        });
+    
+        // Event listener for the Copy button
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const output = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                alert('Output copied to clipboard!');
+            });
+        });
+    
+        // Event listener for the "Try it out!" button
+        document.getElementById('tryItButton').addEventListener('click', function() {
+            const apiKey = document.getElementById('apiKeyInput').value;
+            
+            // Check if API key is provided
+            if (!apiKey || apiKey === "API-KEY") {
+                alert('Please provide a valid API key to run the API call.');
+            } else if (apiUrl) {
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('apiResult').textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        document.getElementById('apiResult').textContent = 'Error: ' + error;
+                    });
+            } else {
+                document.getElementById('apiResult').textContent = 'Please convert the URL first!';
+            }
+        });
+    
+        // Function that converts the search URL into the API URL
+        function search2API(queryurl, api_key) {
+            const urlParams = new URLSearchParams(new URL(queryurl).search);
+            let endpoint = '';
+            
+            if (queryurl.includes('search/organization?')) {
+                endpoint = "https://api.deutsche-digitale-bibliothek.de/search/organization?";
+            } else if (queryurl.includes('search/person?')) {
+                endpoint = "https://api.deutsche-digitale-bibliothek.de/search/person?";
+            } else {
+                endpoint = "https://api.deutsche-digitale-bibliothek.de/search?";
+            }
+    
+            let defaultValues = [`oauth_consumer_key=${api_key}`];
+            if (urlParams.has('query')) {
+                const query = urlParams.get('query');
+                defaultValues.push(`query=${encodeURIComponent(query)}`);
+            }
+    
+            const facetValues = urlParams.getAll('facetValues[]');
+            if (facetValues.length > 0) {
+                facetValues.forEach(facet => {
+                    const [fac, val] = facet.split('=');
+                    defaultValues.push(`facet=${fac}&${fac}=${encodeURIComponent(val)}`);
+                });
+            }
+    
+            return endpoint + defaultValues.join('&');
+        }
+    </script>
+    
+
+</body>
+</html>
