@@ -84,7 +84,11 @@
     <button id="tryItButton" class="btn btn-success mt-3">Try it out!</button>
 
     <h2 class="my-4">API Result</h2>
-    <pre id="apiResult">No result yet.</pre>
+    <div class="output-box">
+        <pre id="apiResult"><code class="language-json">No result yet.</code></pre>
+        <span id="copyResultButton" class="copy-icon" title="Copy to clipboard">📋</span>
+    </div>
+    
 
     <footer>
         <p>This application was created using ChatGPT 4.0.</p>
@@ -132,6 +136,15 @@ document.getElementById('convertButton').addEventListener('click', function() {
                 alert('Output copied to clipboard!');
             });
         });
+
+        // Event listener for copying the API result JSON
+document.getElementById('copyResultButton').addEventListener('click', function() {
+    const apiResult = document.getElementById('apiResult').textContent;
+    navigator.clipboard.writeText(apiResult).then(() => {
+        alert('API result copied to clipboard!');
+    });
+});
+
     
         // Event listener for the "Try it out!" button
         document.getElementById('tryItButton').addEventListener('click', function() {
