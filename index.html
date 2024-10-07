@@ -127,8 +127,10 @@ document.getElementById('convertButton').addEventListener('click', function() {
     // Update the API URL each time Convert is clicked
     apiUrl = search2API(queryUrl, apiKey);
     
-    // Display the updated API URL in the output box
-    document.getElementById('output').textContent = apiUrl;
+     // Only update the output if a valid API URL was returned
+     if (apiUrl) {
+        document.getElementById('output').textContent = apiUrl;
+    }
 });
 
     
@@ -173,6 +175,8 @@ document.getElementById('copyResultButton').addEventListener('click', function()
         });
 
         function search2API(queryurl, api_key) {
+            // Use try-catch to handle potential invalid URL exceptions
+    try {
     const urlParams = new URLSearchParams(new URL(queryurl).search);
     let endpoint = '';
     
@@ -203,6 +207,12 @@ document.getElementById('copyResultButton').addEventListener('click', function()
 
     // Return the final API call URL with proper encoding
     return endpoint + defaultValues.join('&');
+} catch (error) {
+
+        // If an error occurs, display an alert with the error message
+        alert('Invalid URL. Please make sure the search URL is correct.');
+        return ''; // Return an empty string if the URL is invalid
+    }
 }
 
     </script>
