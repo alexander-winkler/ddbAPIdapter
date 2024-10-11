@@ -312,6 +312,11 @@ response = requests.get(endpoint, headers=headers, params=params)
 print(response.json())`;
 }
 
+// Select the content of the API key input field when it is clicked or focused
+document.getElementById('apiKeyInput').addEventListener('click', function() {
+    this.select();  // Select the entire content on click
+});
+
     
         // Event listener for the "Try it out!" button
         document.getElementById('tryItButton').addEventListener('click', function() {
