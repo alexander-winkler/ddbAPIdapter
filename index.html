@@ -11,6 +11,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
   
     <style>
+
+    #logo {
+    vertical-align: middle; /* Align the logo with the text */
+    width: 150px; /* Adjust the size of the logo */
+    height: auto;
+    margin-right: 10px; /* Add spacing between the logo and the title */
+}
+
         .output-box {
             display: flex;
             align-items: center;
@@ -95,7 +103,10 @@
 </head>
 <body class="container">
 
-    <h1 class="my-4">ddbAPIdapter</h1>
+    <h1 class="my-4">
+        <img src="logo.png" alt="Logo" id="logo" class="mr-3">
+        ddbAPIdapter
+    </h1>
     <p>A simple tool that translates a Deutsche Digitale Bibliothek (DDB) search URL into a DDB API call.</p>
     
     <div class="form-group">
