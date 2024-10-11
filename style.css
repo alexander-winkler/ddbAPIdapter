@@ -1,0 +1,116 @@
+#logo {
+    vertical-align: middle; /* Align the logo with the text */
+    width: 150px; /* Adjust the size of the logo */
+    height: auto;
+    margin-right: 10px; /* Add spacing between the logo and the title */
+}
+
+        .output-box {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Add margin here for optical distance */
+        }
+        .output {
+            width: 100%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            word-break: break-all;
+        }
+        .copy-icon {
+            cursor: pointer;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        #apiResult {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            max-height: 800px;
+            overflow-y: auto;
+            resize: both; /* Allows resizing in both directions */
+            min-height: 100px; /* Set a minimum height */
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        footer img {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .footer-icons img {
+            margin-right: 10px;
+        }
+        .footer-icons a {
+            margin-right: 60px;
+        } 
+        .card-body {
+            padding: 0px;
+        }
+        /* Make the accordion more compact */
+        .accordion .card-header {
+            padding: 5px 10px;  /* Reduce padding in the accordion header */
+            font-size: 0.9rem;  /* Reduce font size of the accordion header */
+            background-color: #f8f9fa; /* Keep a subtle background */
+            border: 1px solid #ddd;  /* Lighter border for a less obtrusive look */
+        }
+
+        .accordion .card-body {
+            padding: 10px;  /* Reduce padding inside the accordion content */
+            font-size: 0.9rem;  /* Make the content font size smaller */
+            border-top: 1px solid #ddd;
+        }
+
+        .accordion .card {
+            border: none;  /* Remove the outer border of the card to make it less obtrusive */
+            margin-bottom: 5px;  /* Decrease spacing between accordion cards */
+        }
+
+        .accordion .btn-link {
+            font-size: 0.9rem;  /* Reduce font size of the button */
+            text-decoration: none;  /* Remove underline */
+            color: #007bff;  /* Use a subtle blue color */
+            padding: 0;  /* Remove padding for a tighter look */
+        }
+        <style>
+    /* Card Customization */
+    .card {
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    /* Styling for the Input Section */
+    .form-group label {
+        font-size: 1.1rem;
+    }
+
+    /* Customizing the Button */
+    .btn-primary {
+        background-color: #8a2b3c;
+        border-color: #8a2b3c;
+    }
+
+    .btn-primary:hover {
+        background-color: #6e1f2c;
+        border-color: #6e1f2c;
+    }
+
+    /* Padding and Margins */
+    .rounded {
+        border-radius: 10px !important;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+    }
