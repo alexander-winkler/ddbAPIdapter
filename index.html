@@ -101,7 +101,37 @@
             color: #007bff;  /* Use a subtle blue color */
             padding: 0;  /* Remove padding for a tighter look */
         }
+        <style>
+    /* Card Customization */
+    .card {
+        border-radius: 10px;
+        padding: 20px;
+    }
 
+    /* Styling for the Input Section */
+    .form-group label {
+        font-size: 1.1rem;
+    }
+
+    /* Customizing the Button */
+    .btn-primary {
+        background-color: #8a2b3c;
+        border-color: #8a2b3c;
+    }
+
+    .btn-primary:hover {
+        background-color: #6e1f2c;
+        border-color: #6e1f2c;
+    }
+
+    /* Padding and Margins */
+    .rounded {
+        border-radius: 10px !important;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+    }
 
     </style>
 </head>
@@ -113,18 +143,31 @@
     </h1>
     <p>A simple tool that translates a <a href="https://www.deutsche-digitale-bibliothek.de/">Deutsche Digitale Bibliothek (DDB)</a> search URL into a DDB API call.</p>
     
-    <div class="form-group">
-        <label for="urlInput">URL:</label>
-        <input type="text" id="urlInput" class="form-control" placeholder="Enter the search URL">
+    <!-- Stylish Section for Instructions and Disclaimer -->
+<div class="card shadow-sm border-0 mb-5" style="background-color: #f8f9fa;">
+    <div class="card-body">
+      <h5 class="card-title text-primary font-weight-bold">How to use the tool</h5>
+      <p class="card-text">Configure your search in the DDB portal, choose your filters and search parameters. Copy the URL from your browser’s address bar, then paste it into the box below. If you like, you can also paste your API key and try out the API call directly here.</p>
+      <p><strong>Disclaimer:</strong> This tool runs entirely in your browser, and no data is stored or sent to any external servers. Your API key and search data remain private.</p>
     </div>
-    
+  </div>
+  
+  <!-- Input Section with Border and Padding -->
+  <div class="p-4 rounded shadow-sm border mb-5 bg-white">
     <div class="form-group">
-        <label for="apiKeyInput">API Key (optional):</label>
-        <input type="text" id="apiKeyInput" class="form-control" value="API-KEY">
+      <label for="urlInput" class="font-weight-bold text-secondary">Enter the DDB Search URL:</label>
+      <input type="text" id="urlInput" class="form-control" placeholder="Enter the search URL">
     </div>
-    
+  
+    <div class="form-group">
+      <label for="apiKeyInput" class="font-weight-bold text-secondary">API Key (optional):</label>
+      <input type="text" id="apiKeyInput" class="form-control" value="API-KEY">
+    </div>
+  
     <button id="convertButton" class="btn btn-primary mb-3">Convert</button>
-    
+  </div>
+  
+      
     <div class="output-box">
         <div id="outputUrl" class="output"></div>
         <span id="copyUrlButton" class="copy-icon" title="Copy to clipboard">📋</span>
