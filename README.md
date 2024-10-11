@@ -24,21 +24,31 @@ To run this project, you simply need a modern web browser like Chrome, Firefox, 
 
 ### Installation
 
-1. Clone this repository to your local machine:
+1. **Clone this repository to your local machine:**
 
     ```bash
     git clone https://github.com/yourusername/ddbAPIdapter.git
     ```
 
-2. Open the `index.html` file in your browser.
+2. **Navigate to the project directory:**
 
-### Usage
+    ```bash
+    cd ddbAPIdapter
+    ```
 
-1. Open the `index.html` file in any browser.
-2. Input a valid **DDB search URL** in the "URL" input box.
-3. (Optional) Input an **API Key** if you want to execute the API request.
-4. Click the **Convert** button to generate the corresponding DDB API call.
-5. Copy the generated API URL or click **Try it out!** to run the API call and see the response.
+3. **Start a local server:** You need to run a local server for the JavaScript to function correctly. You can use Python's built-in HTTP server:
+
+    ```bash
+    python -m http.server
+    ```
+
+4. **Open the tool in your browser:** After starting the server, open your browser and go to:
+
+    ```bash
+    http://localhost:8000
+    ```
+5. **Follow the instructions in the interface** to paste your DDB search URL and (optionally) your API key.
+
 
 ## Technical Details
 
@@ -48,12 +58,6 @@ To run this project, you simply need a modern web browser like Chrome, Firefox, 
 - **Clipboard API**: Allows easy copying of the generated API URL.
 - **Error Handling**: Alerts the user if no API key is provided or if there is an error during the API request.
 
-## File Structure
-
-```plaintext
-├── index.html      # The main HTML file that contains the form and logic
-└── README.md       # This file
-```
 
 ## Credits
 
