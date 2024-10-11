@@ -15,6 +15,7 @@
             display: flex;
             align-items: center;
             margin-top: 10px;
+            margin-bottom: 20px; /* Add margin here for optical distance */
         }
         .output {
             width: 100%;
@@ -59,7 +60,37 @@
         }
         .footer-icons a {
             margin-right: 60px;
+        } 
+        .card-body {
+            padding: 0px;
         }
+        /* Make the accordion more compact */
+        .accordion .card-header {
+            padding: 5px 10px;  /* Reduce padding in the accordion header */
+            font-size: 0.9rem;  /* Reduce font size of the accordion header */
+            background-color: #f8f9fa; /* Keep a subtle background */
+            border: 1px solid #ddd;  /* Lighter border for a less obtrusive look */
+        }
+
+        .accordion .card-body {
+            padding: 10px;  /* Reduce padding inside the accordion content */
+            font-size: 0.9rem;  /* Make the content font size smaller */
+            border-top: 1px solid #ddd;
+        }
+
+        .accordion .card {
+            border: none;  /* Remove the outer border of the card to make it less obtrusive */
+            margin-bottom: 5px;  /* Decrease spacing between accordion cards */
+        }
+
+        .accordion .btn-link {
+            font-size: 0.9rem;  /* Reduce font size of the button */
+            text-decoration: none;  /* Remove underline */
+            color: #007bff;  /* Use a subtle blue color */
+            padding: 0;  /* Remove padding for a tighter look */
+        }
+
+
     </style>
 </head>
 <body class="container">
@@ -183,42 +214,59 @@ document.getElementById('convertButton').addEventListener('click', function() {
 });
 
     
-        // Event listener for the Copy button
-        document.getElementById('copyUrlButton').addEventListener('click', function() {
-            const output = document.getElementById('outputUrl').textContent;
-            navigator.clipboard.writeText(output).then(() => {
-                alert('API URL  copied to clipboard!');
-            });
+// Event listener for copying the API URL
+document.getElementById('copyUrlButton').addEventListener('click', function() {
+    const output = document.getElementById('outputUrl').textContent.trim();
+    if (output === "") {
+        alert('The API URL output is empty. Nothing to copy!');
+    } else {
+        navigator.clipboard.writeText(output).then(() => {
+            alert('API URL copied to clipboard!');
         });
+    }
+});
 
-
-        document.getElementById('copyCurlButton').addEventListener('click', function() {
-            const output = document.getElementById('outputCurl').textContent;
-            navigator.clipboard.writeText(output).then(() => {
-                alert('CURL command copied to clipboard!');
-            });
+// Event listener for copying the CURL command
+document.getElementById('copyCurlButton').addEventListener('click', function() {
+    const output = document.getElementById('outputCurl').textContent.trim();
+    if (output === "") {
+        alert('The CURL command output is empty. Nothing to copy!');
+    } else {
+        navigator.clipboard.writeText(output).then(() => {
+            alert('CURL command copied to clipboard!');
         });
+    }
+});
 
-        document.getElementById('copyPythonButton').addEventListener('click', function() {
-            const output = document.getElementById('outputPython').textContent;
-            navigator.clipboard.writeText(output).then(() => {
-                alert('Python requests code copied to clipboard!');
-            });
+// Event listener for copying the Python requests code
+document.getElementById('copyPythonButton').addEventListener('click', function() {
+    const output = document.getElementById('outputPython').textContent.trim();
+    if (output === "") {
+        alert('The Python requests code output is empty. Nothing to copy!');
+    } else {
+        navigator.clipboard.writeText(output).then(() => {
+            alert('Python requests code copied to clipboard!');
         });
+    }
+});
 
-        // Event listener for copying the API result JSON
+// Event listener for copying the API result JSON
 document.getElementById('copyResultButton').addEventListener('click', function() {
-    const apiResult = document.getElementById('apiResult').textContent;
-    navigator.clipboard.writeText(apiResult).then(() => {
-        alert('API result copied to clipboard!');
-    });
+    const apiResult = document.getElementById('apiResult').textContent.trim();
+    if (apiResult === "No result yet." || apiResult === "") {
+        alert('The API result output is empty. Nothing to copy!');
+    } else {
+        navigator.clipboard.writeText(apiResult).then(() => {
+            alert('API result copied to clipboard!');
+        });
+    }
 });
 
 // Generate the CURL command
 function generateCurlCommand(apiUrl, apiKey) {
     // Remove API key from URL for curl command
     const urlWithoutKey = apiUrl.replace(/oauth_consumer_key=[^&]+&?/, '');
-    return `curl -X GET "${urlWithoutKey}" \\\n  -H "Accept: application/json" \\\n  -H "Authorization: OAuth oauth_consumer_key=${apiKey !== 'API-KEY' ? apiKey : 'YOUR_API_KEY'}"`;
+    return `curl -X GET "${urlWithoutKey}" \\\n  -H "Accept: application/json" \\\n  -H 'Authorization: OAuth oauth_consumer_key="${apiKey !== "API-KEY" ? apiKey : "YOUR_API_KEY"}"'`;
 }
 
 // Generate the Python requests code
@@ -228,14 +276,42 @@ function generatePythonCode(apiUrl, apiKey) {
     
     // Split URL into endpoint and query parameters
     const [endpoint, queryString] = urlWithoutKey.split('?');
-    const params = queryString ? queryString.split('&').reduce((acc, param) => {
-        const [key, value] = param.split('=');
-        acc[key] = decodeURIComponent(value);
-        return acc;
-    }, {}) : {};
+    const params = {};
+    const facets = [];  // List to store multiple facet values
+    
+    if (queryString) {
+        queryString.split('&').forEach(param => {
+            const [key, value] = param.split('=');
+            const decodedValue = decodeURIComponent(value);
+            
+            if (key === "facet") {
+                facets.push(decodedValue);  // Add to facets list
+            } else {
+                params[key] = decodedValue;
+            }
+        });
+    }
 
-    return `import requests\n\nendpoint = "${endpoint}"\nparams = ${JSON.stringify(params, null, 2)}\n\nheaders = {\n  "Accept": "application/json",\n  "Authorization": "OAuth oauth_consumer_key=${apiKey !== 'API-KEY' ? apiKey : 'YOUR_API_KEY'}"\n}\n\nresponse = requests.get(endpoint, headers=headers, params=params)\nprint(response.json())`;
+    // Add facets list to params if it contains any elements
+    if (facets.length > 0) {
+        params['facet'] = facets;
+    }
+
+    // Construct the Python code
+    return `import requests
+
+endpoint = "${endpoint}"
+params = ${JSON.stringify(params, null, 2)}
+
+headers = {
+  "Accept": "application/json",
+  "Authorization": 'OAuth oauth_consumer_key="${apiKey !== "API-KEY" ? apiKey : "YOUR_API_KEY"}"'
 }
+
+response = requests.get(endpoint, headers=headers, params=params)
+print(response.json())`;
+}
+
     
         // Event listener for the "Try it out!" button
         document.getElementById('tryItButton').addEventListener('click', function() {
