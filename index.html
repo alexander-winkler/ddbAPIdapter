@@ -80,9 +80,50 @@
     <button id="convertButton" class="btn btn-primary mb-3">Convert</button>
     
     <div class="output-box">
-        <div id="output" class="output"></div>
-        <span id="copyButton" class="copy-icon" title="Copy to clipboard">📋</span>
+        <div id="outputUrl" class="output"></div>
+        <span id="copyUrlButton" class="copy-icon" title="Copy to clipboard">📋</span>
     </div>
+
+    <!-- Accordion for CURL and Python requests outputs -->
+<div class="accordion" id="outputAccordion">
+    <!-- CURL Command -->
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            CURL Command
+          </button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#outputAccordion">
+        <div class="card-body">
+          <div class="output-box">
+            <pre id="outputCurl" class="output"></pre>
+            <span id="copyCurlButton" class="copy-icon" title="Copy to clipboard">📋</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Python requests Code -->
+    <div class="card">
+      <div class="card-header" id="headingThree">
+        <h2 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Python requests Code
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#outputAccordion">
+        <div class="card-body">
+          <div class="output-box">
+            <pre id="outputPython" class="output"></pre>
+            <span id="copyPythonButton" class="copy-icon" title="Copy to clipboard">📋</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     
     <button id="tryItButton" class="btn btn-success mt-3">Try it out!</button>
 
@@ -129,16 +170,39 @@ document.getElementById('convertButton').addEventListener('click', function() {
     
      // Only update the output if a valid API URL was returned
      if (apiUrl) {
-        document.getElementById('output').textContent = apiUrl;
+        document.getElementById('outputUrl').textContent = apiUrl;
+
+        // Generate and display the curl command in the accordion
+        const curlCommand = generateCurlCommand(apiUrl, apiKey);
+        document.getElementById('outputCurl').textContent = curlCommand;
+
+        // Generate and display the Python requests code in the accordion
+        const pythonCode = generatePythonCode(apiUrl, apiKey);
+        document.getElementById('outputPython').textContent = pythonCode;
     }
 });
 
     
         // Event listener for the Copy button
-        document.getElementById('copyButton').addEventListener('click', function() {
-            const output = document.getElementById('output').textContent;
+        document.getElementById('copyUrlButton').addEventListener('click', function() {
+            const output = document.getElementById('outputUrl').textContent;
             navigator.clipboard.writeText(output).then(() => {
-                alert('Output copied to clipboard!');
+                alert('API URL  copied to clipboard!');
+            });
+        });
+
+
+        document.getElementById('copyCurlButton').addEventListener('click', function() {
+            const output = document.getElementById('outputCurl').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                alert('CURL command copied to clipboard!');
+            });
+        });
+
+        document.getElementById('copyPythonButton').addEventListener('click', function() {
+            const output = document.getElementById('outputPython').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                alert('Python requests code copied to clipboard!');
             });
         });
 
@@ -150,6 +214,28 @@ document.getElementById('copyResultButton').addEventListener('click', function()
     });
 });
 
+// Generate the CURL command
+function generateCurlCommand(apiUrl, apiKey) {
+    // Remove API key from URL for curl command
+    const urlWithoutKey = apiUrl.replace(/oauth_consumer_key=[^&]+&?/, '');
+    return `curl -X GET "${urlWithoutKey}" \\\n  -H "Accept: application/json" \\\n  -H "Authorization: OAuth oauth_consumer_key=${apiKey !== 'API-KEY' ? apiKey : 'YOUR_API_KEY'}"`;
+}
+
+// Generate the Python requests code
+function generatePythonCode(apiUrl, apiKey) {
+    // Remove API key from URL for Python requests code
+    const urlWithoutKey = apiUrl.replace(/oauth_consumer_key=[^&]+&?/, '');
+    
+    // Split URL into endpoint and query parameters
+    const [endpoint, queryString] = urlWithoutKey.split('?');
+    const params = queryString ? queryString.split('&').reduce((acc, param) => {
+        const [key, value] = param.split('=');
+        acc[key] = decodeURIComponent(value);
+        return acc;
+    }, {}) : {};
+
+    return `import requests\n\nendpoint = "${endpoint}"\nparams = ${JSON.stringify(params, null, 2)}\n\nheaders = {\n  "Accept": "application/json",\n  "Authorization": "OAuth oauth_consumer_key=${apiKey !== 'API-KEY' ? apiKey : 'YOUR_API_KEY'}"\n}\n\nresponse = requests.get(endpoint, headers=headers, params=params)\nprint(response.json())`;
+}
     
         // Event listener for the "Try it out!" button
         document.getElementById('tryItButton').addEventListener('click', function() {
@@ -176,9 +262,10 @@ document.getElementById('copyResultButton').addEventListener('click', function()
 
         function search2API(queryurl, api_key) {
             // Use try-catch to handle potential invalid URL exceptions
-    try {
+            let endpoint = '';
+            try {
     const urlParams = new URLSearchParams(new URL(queryurl).search);
-    let endpoint = '';
+    
     
     if (queryurl.includes('search/organization?')) {
         endpoint = "https://api.deutsche-digitale-bibliothek.de/search/organization?";
