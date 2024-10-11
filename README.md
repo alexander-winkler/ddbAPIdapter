@@ -27,7 +27,12 @@ To run this project, you simply need a modern web browser like Chrome, Firefox, 
 1. **Clone this repository to your local machine:**
 
     ```bash
-    git clone https://github.com/yourusername/ddbAPIdapter.git
+    git clone git@github.com:alexander-winkler/ddbAPIdapter.git # via ssh
+    ```
+
+    or
+    ```bash
+    git clone https://github.com/alexander-winkler/ddbAPIdapter.git # via https
     ```
 
 2. **Navigate to the project directory:**
