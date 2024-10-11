@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ddbAPIdapter - A Simple DDB API Converter</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" href="/ddbAPIdapter/favicon.ico" type="image/x-icon">
 
@@ -111,7 +111,7 @@
         <img src="logo.png" alt="Logo" id="logo" class="mr-3">
         ddbAPIdapter
     </h1>
-    <p>A simple tool that translates a Deutsche Digitale Bibliothek (DDB) search URL into a DDB API call.</p>
+    <p>A simple tool that translates a <a href="https://www.deutsche-digitale-bibliothek.de/">Deutsche Digitale Bibliothek (DDB)</a> search URL into a DDB API call.</p>
     
     <div class="form-group">
         <label for="urlInput">URL:</label>
@@ -209,7 +209,7 @@
         // Event listener for the Convert button
 document.getElementById('convertButton').addEventListener('click', function() {
     const queryUrl = document.getElementById('urlInput').value;
-    const apiKey = document.getElementById('apiKeyInput').value || "API-KEY";
+    const apiKey = document.getElementById('apiKeyInput').value.trim() || "API-KEY";
     
     // Update the API URL each time Convert is clicked
     apiUrl = search2API(queryUrl, apiKey);
@@ -296,8 +296,8 @@ function generatePythonCode(apiUrl, apiKey) {
     
     if (queryString) {
         queryString.split('&').forEach(param => {
-            const [key, value] = param.split('=');
-            const decodedValue = decodeURIComponent(value);
+            let [key, value] = param.split('=');
+            let decodedValue = decodeURIComponent(value.replace(/\+/g, ' '));  // Convert "+" to space
             
             if (key === "facet") {
                 facets.push(decodedValue);  // Add to facets list
@@ -320,12 +320,13 @@ params = ${JSON.stringify(params, null, 2)}
 
 headers = {
   "Accept": "application/json",
-  "Authorization": 'OAuth oauth_consumer_key="${apiKey !== "API-KEY" ? apiKey : "YOUR_API_KEY"}"'
+  "Authorization": 'OAuth oauth_consumer_key="${apiKey !== 'API-KEY' ? apiKey : 'YOUR_API_KEY'}"'
 }
 
 response = requests.get(endpoint, headers=headers, params=params)
 print(response.json())`;
 }
+
 
 // Select the content of the API key input field when it is clicked or focused
 document.getElementById('apiKeyInput').addEventListener('click', function() {
