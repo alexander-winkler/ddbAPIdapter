@@ -1,4 +1,5 @@
-# ddbAPIdapter
+
+  <h1><img src="logo.png" alt="ddbAPIdapter Logo" width="150" style="vertical-align: middle; margin-right: 10px;">ddbAPIdapter</h1>
 
 ddbAPIdapter is a simple web tool that converts a search URL from the [Deutsche Digitale Bibliothek (DDB)](https://www.deutsche-digitale-bibliothek.de) into a corresponding DDB API call. This allows users to translate their search queries into API requests and test them out easily.
 
